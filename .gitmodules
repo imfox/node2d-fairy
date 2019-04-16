@@ -1,0 +1,3 @@
+[submodule "node"]
+	path = node
+	url = https://github.com/imfox/love2d-node.git
