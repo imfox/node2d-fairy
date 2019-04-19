@@ -1,8 +1,9 @@
 local Class = require("class");
 local Drawable = require("fairy.core.display.DisplayObject");
 local Event = require("node.modules.Event");
+local FEvent = require("fairy.core.event.Event");
 local Pool = require("fairy.core.utils.Pool");
-local TouchManager = require("fairy.core.event.TouchManager").instance;
+local TouchManager = require("fairy.core.event.TouchManager");
 local gr = love.graphics;
 
 ---@class Node_Core_Display_Stage : Node_Core_Display_Drawable
@@ -10,7 +11,6 @@ local c = Class(Drawable);
 function c:ctor()
     Drawable.ctor(self);
 
-    self._gid = 1;
     self.offsetX = 0;
     self.offsetY = 0;
     self.screenScaleX = 1;
@@ -19,10 +19,12 @@ function c:ctor()
     self.bgColor = 0xffffff;
 
     self._scaleMode = "SHOWALL";
+
+    Drawable._STC_stage = self;
 end
 
 function c:update(dt)
-    TouchManager:runEvent();
+    TouchManager.instance:runEvent();
 end
 
 function c:draw()
@@ -31,6 +33,13 @@ function c:draw()
     gr.scale(self.screenScaleX, self.screenScaleY)
     self:__render(gr);
     gr.pop()
+
+    for _, dr in ipairs(Drawable._STC_renderCallbackList) do
+        dr:event(FEvent.RENDER);
+    end
+    for _, dr in ipairs(Drawable._STC_enterFrameCallbackList) do
+        dr:event(FEvent.ENTER_FRAME);
+    end
 
     if self.offsetX ~= 0 or self.offsetY ~= 0 then
         --隐藏其它...比较搓
@@ -105,7 +114,7 @@ end
 function c:onMouseEvent(type, id, x, y)
     local nx, ny = self:touchPoint(x, y);
     if nx > 0 and ny > 0 then
-        TouchManager:onTouch(type, id, nx, ny);
+        TouchManager.instance:onTouch(type, id, nx, ny);
     end
 end
 
@@ -114,5 +123,5 @@ function c:_changeWindowSize()
 end
 
 c.instance = c.new();
-TouchManager:setStage(c.instance);
+TouchManager.instance:setStage(c.instance);
 return c;

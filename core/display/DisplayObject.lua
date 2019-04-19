@@ -2,6 +2,8 @@ local Class = require("class");
 ---@type Node_Node
 local Node = require("node.modules.Node");
 local TouchEvent = require("fairy.core.event.TouchEvent");
+local Event = require("fairy.core.event.Event");
+local Common = require("fairy.core.utils.Common");
 
 local _zid = 0;
 
@@ -37,13 +39,21 @@ end
 ---@field alpha number
 ---@field touchEnabled boolean
 ---@field touchThrough boolean
+---@field stage Node_Core_Display_Stage @readonly
 local c = Class(Node);
+
+---@type Node_Core_Display_Stage
+c._STC_stage = nil;
+
+---@type Node_Core_Display_Drawable[]
+c._STC_enterFrameCallbackList = {};
+
+---@type Node_Core_Display_Drawable[]
+c._STC_renderCallbackList = {};
 
 function c:ctor()
     Node.ctor(self);
 
-    self.width = 0;
-    self.height = 0;
     self.alpha = 1;
     self.blendMode = nil;
     self.transform = newTransform();
@@ -62,7 +72,38 @@ function c:ctor()
     self:setter_getter("scaleY", self.__setScaleY, self.__getScaleY);
     self:setter_getter("rotation", self.__setRotation, self.__getRotation);
     self:setter_getter("zOrder", self.__setZOrder, self.__getZOrder);
+    self:setter_getter("width", self.__setWidth, self.__getWidth);
+    self:setter_getter("height", self.__setHeight, self.__getHeight);
+    self:getter("stage", self.__getStage);
 
+end
+
+---@protected
+function c:__getStage()
+    return self._STC_stage;
+end
+
+---@protected
+function c:__setWidth(v)
+    if self._width ~= v then
+        self._width = v
+    end
+end
+
+---@protected
+function c:__getWidth()
+    return self._width or 0;
+end
+---@protected
+function c:__setHeight(v)
+    if self._height ~= v then
+        self._height = v
+    end
+end
+
+---@protected
+function c:__getHeight()
+    return self._height or 0;
 end
 
 ---@protected
@@ -174,7 +215,32 @@ function c:on(type, func, caller, args)
     if TouchEvent.IsTouchEvent(type) then
         self:_mouseEnable(true);
     end
+    local isEnterFrame = type == Event.ENTER_FRAME;
+    if isEnterFrame or type == Event.RENDER then
+        local list = isEnterFrame and c._STC_enterFrameCallbackList or c._STC_renderCallbackList;
+        if Common.Array.IndexOf(list, self) == 0 then
+            table.insert(list, self);
+        end
+    end
     return Node.on(self, type, func, caller, args);
+end
+
+---@overload
+---@param type string
+---@param func fun
+---@param caller any
+---@param args any[]
+---@return Node_EventDispatcher
+function c:off(type, func, caller, onceOnly)
+    local isEnterFrame = type == Event.ENTER_FRAME;
+    if isEnterFrame or type == Event.RENDER then
+        local list = isEnterFrame and c._STC_enterFrameCallbackList or c._STC_renderCallbackList;
+        local index = Common.Array.IndexOf(list, self);
+        if index ~= 0 then
+            table.remove(list, index);
+        end
+    end
+    Node.off(self, type, func, caller, onceOnly)
 end
 
 ---@overload

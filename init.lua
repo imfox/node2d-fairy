@@ -3,7 +3,7 @@
         class
 --]]
 
-class = require("class");
+local Class = require("class");
 local Namespace = require("fairy.Namespace");
 local Event = require("node.modules.Event");
 local TouchEvent = require("fairy.core.event.TouchEvent");
@@ -93,6 +93,7 @@ end
 
 local function register()
     if stageInstance then
+        class = Class;
         local funcs = { "update", "draw", "focus", "resize", "keypressed", "keyreleased", "wheelmoved" };
 
         local touchFuncs = { "mousemoved", "mousepressed", "mousereleased" }

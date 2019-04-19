@@ -5,7 +5,7 @@ display.Stage = require("fairy.core.display.Stage");
 
 local event = {};
 event.EventDispatcher = require("node.modules.EventDispatcher");
-event.Event = require("node.modules.Event");
+event.Event = require("fairy.core.event.Event");
 event.TouchEvent = require("fairy.core.event.TouchEvent");
 
 local utils = {};
@@ -13,11 +13,15 @@ utils.Utils = require("fairy.core.utils.Utils");
 utils.Handler = require("node.modules.Handler");
 utils.Pool = require("fairy.core.utils.Pool");
 
+local ui = {};
+ui.Image = require("fairy.ui.Image");
+
 ---@class Node_Core_Namespace
 local namespace = {};
 namespace.display = display;
 namespace.event = event;
 namespace.utils = utils;
+namespace.ui = ui;
 
 ------------------------------------------
 namespace.Node = display.Node;
