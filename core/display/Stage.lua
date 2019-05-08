@@ -31,7 +31,7 @@ function c:draw()
     gr.push()
     gr.translate(self.offsetX, self.offsetY)
     gr.scale(self.screenScaleX, self.screenScaleY)
-    self:__render(gr);
+    self:__render();
     gr.pop()
 
     for _, dr in ipairs(Drawable._STC_renderCallbackList) do

@@ -4,13 +4,12 @@ local Node = require("node.modules.Node");
 local TouchEvent = require("fairy.core.event.TouchEvent");
 local Event = require("fairy.core.event.Event");
 local Common = require("fairy.core.utils.Common");
+local Graphics = require("fairy.core.display.Graphics");
+local Pool = require("fairy.core.utils.Pool");
 
 local _zid = 0;
 
-local gr = love.graphics
-local translate, pop, push, applyTransform, newTransform = gr.translate, gr.pop, gr.push, gr.applyTransform, love.math.newTransform
-local getColor, setColor = gr.getColor, gr.setColor
-local setBlendMode, getBlendMode = gr.setBlendMode, gr.getBlendMode
+local translate, newTransform = love.graphics.translate, love.math.newTransform;
 
 ---@param a Node_Core_Display_Drawable
 ---@param b Node_Core_Display_Drawable
@@ -51,12 +50,19 @@ c._STC_enterFrameCallbackList = {};
 ---@type Node_Core_Display_Drawable[]
 c._STC_renderCallbackList = {};
 
+---@type any
+c._STC_transform = {};
+
 function c:ctor()
     Node.ctor(self);
 
     self.alpha = 1;
     self.blendMode = nil;
-    self.transform = newTransform();
+    self.transform = nil;
+
+    ---@protected
+    ---@type Fairy_Core_Display_Graphics
+    self.graphics = Graphics.new(self);
 
     self.pivotX = 0;
     self.pivotY = 0;
@@ -65,6 +71,9 @@ function c:ctor()
 
     ---@protected
     self.__useTransform = false;
+
+    ---@protected
+    self.sortTabel = nil;
 
     self:setter_getter("x", self.__setX, self.__getX);
     self:setter_getter("y", self.__setY, self.__getY);
@@ -110,7 +119,6 @@ end
 function c:__setX(v)
     if self._x ~= v then
         self._x = v
-        self:__updateTransform();
     end
 end
 
@@ -123,7 +131,6 @@ end
 function c:__setY(v)
     if self._y ~= v then
         self._y = v
-        self:__updateTransform();
     end
 end
 
@@ -191,12 +198,7 @@ end
 
 ---@protected
 function c:__calcTransfrom()
-    if self.transform then
-        self.transform:reset();
-        self.transform:translate(self._x or 0, self._y or 0);
-        self.transform:rotate(math.rad(self.rotation or 0));
-        self.transform:scale(self._scaleX or 1, self._scaleY or 1);
-    end
+    self.graphics._testTransfrom = true;
 end
 
 ---@protected
@@ -256,6 +258,7 @@ function c:addChildAt(node, index)
         if node.touchEnabled then
             self:_mouseEnable(true);
         end
+        self:__updateTransform();
         self:reorderChild();
     else
         print("error: 0x0010");
@@ -273,67 +276,57 @@ end
 
 ---@protected
 function c:__updateTransform()
-    if self.scaleX == 1 and self.scaleY == 1 and self.rotation == 0 then
+    if self.scaleX == 1 and self.scaleY == 1 and self.rotation % 360 == 0 then
         self.__useTransform = false;
-    else
+        if self.transform then
+            Pool.instance:recover("_newTransform", self.transform)
+            self.transform = nil;
+        end
+    elseif self._childs[1] then
         self.__useTransform = true;
+        self.transform = Pool.instance:getItemByCreateFun("_newTransform", newTransform);
+        self:__calcTransfrom();
     end
 end
 
 ---@protected
 ---@return Node_Core_Display_Drawable__RenderState
 function c:__push()
-    ---@type Node_Core_Display_Drawable__RenderState
-    local state = {};
-    state.r, state.g, state.b, state.alpha = getColor()
-    state.blendMode = getBlendMode();
-    if self.alpha < 1 then
-        setColor(state.r, state.g, state.b, state.alpha * self.alpha);
-    end
-    if self.blendMode then
-        setBlendMode(self.blendMode);
-    end
-    push()
-    --if self.rotation % 360 ~= 0 and self._childs[1] then
-    --end
-    applyTransform(self.transform);
-    return state;
+    return self.graphics:_push();
 end
 
 ---@protected
 ---@param state Node_Core_Display_Drawable__RenderState
 ---@return Node_Core_Display_Drawable
 function c:__pop(state)
-    if self.alpha < 1 then
-        setColor(state.r, state.g, state.b, state.alpha);
-    end
-    if self.blendMode then
-        setBlendMode(state.blendMode);
-    end
-    pop()
+    self.graphics:_pop(state)
     return self;
 end
 
 ---@protected
----@param gr graphics
+---@param gr Fairy_Core_Display_Graphics
 ---@return Node_Core_Display_Drawable
-function c:__render(gr)
-    if self.destroyed or not self.visible --[[ or self.alpha == 0 or self._scaleY == 0 or self._scaleX == 0 --]] then
+function c:__render()
+    if self.destroyed or not self.visible then
+        return self;
+    end
+    if false and (self.alpha == 0 or self._scaleY == 0 or self._scaleX == 0) then
         return self;
     end
     local state = self:__push()
-    self:__draw(gr);
-    self:__renderChildren(gr);
+    self:__draw(self.graphics);
+    self:__renderChildren(self.graphics);
     return self:__pop(state)
 end
 
 ---@protected
----@param gr graphics
+---@param gr Fairy_Core_Display_Graphics
 function c:__draw(gr)
+
 end
 
 ---@protected
----@param gr graphics
+---@param gr Fairy_Core_Display_Graphics
 function c:__renderChildren(gr)
     --- 理论上比 self:numChild() > 0  快
     if self._childs[1] then
