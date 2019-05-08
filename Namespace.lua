@@ -14,6 +14,9 @@ utils.Handler = require("node.modules.Handler");
 utils.Pool = require("fairy.core.utils.Pool");
 
 local ui = {};
+ui.UIEvent = require("fairy.ui.event.UIEvent");
+ui.Component = require("fairy.ui.Component");
+ui.Box = require("fairy.ui.Box");
 ui.Image = require("fairy.ui.Image");
 ui.Button = require("fairy.ui.Button");
 

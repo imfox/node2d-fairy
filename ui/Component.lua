@@ -1,6 +1,7 @@
 local class = require("class");
 local UIKeys = require("fairy.core.utils.UIKeys");
 local DisplayObject = require("fairy.core.display.DisplayObject");
+local UIEvent = require("fairy.ui.event.UIEvent");
 
 ---@class Fairy_UI_Component : Node_Core_Display_Drawable
 ---@field minWidth number
@@ -30,6 +31,22 @@ function c:ctor()
     self.maxWidth = 10000;
     self.maxHeight = 100000;
 
+end
+
+---@protected
+function c:__setX(v)
+    if self._x ~= v then
+        DisplayObject.__setX(self, v);
+        self:event(UIEvent.MOVE_POS);
+    end
+end
+
+---@protected
+function c:__setY(v)
+    if self._y ~= v then
+        DisplayObject.__setY(self, v);
+        self:event(UIEvent.MOVE_POS);
+    end
 end
 
 ---@protected

@@ -25,7 +25,7 @@ end
 
 ---@param img Image
 function c:draw(img)
-    gr.draw(img, self.x, self.y, self.rotation, self.scaleX * (self.display.width / img:getWidth()), self.scaleY);
+    gr.draw(img, self.x, self.y, self.rotation, self.scaleX * (self.display.width / img:getWidth()), self.scaleY * (self.display.height / img:getHeight()));
 end
 
 function c:drawGrid(img)
