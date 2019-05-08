@@ -25,7 +25,7 @@ end
 
 ---@param img Image
 function c:draw(img)
-    gr.draw(img, self.x, self.y, self.rotation, self.scaleX, self.scaleY);
+    gr.draw(img, self.x, self.y, self.rotation, self.scaleX * (self.display.width / img:getWidth()), self.scaleY);
 end
 
 function c:drawGrid(img)
@@ -60,6 +60,7 @@ function c:_push()
     if display.__useTransform then
         if self._testTransfrom then
             self:__calcTransfrom(x, y, display.rotation, display._scaleX, display._scaleY);
+            self._testTransfrom = false;
         end
         push()
         applyTransform(display.transform);

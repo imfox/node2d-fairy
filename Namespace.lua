@@ -15,6 +15,7 @@ utils.Pool = require("fairy.core.utils.Pool");
 
 local ui = {};
 ui.Image = require("fairy.ui.Image");
+ui.Button = require("fairy.ui.Button");
 
 ---@class Node_Core_Namespace
 local namespace = {};
