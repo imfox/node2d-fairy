@@ -4,7 +4,7 @@ local Component = require("fairy.ui.Component");
 local UIEvent = require("fairy.ui.event.UIEvent");
 
 ---@class Fairy_UI_Box : Fairy_UI_Component
----@field skin string
+---@field autoSize boolean
 local c = Class(Component);
 
 function c:ctor()
@@ -15,6 +15,37 @@ function c:ctor()
     ---@protected
     self.__oy = 0;
 
+    self.autoSize = true;
+
+end
+
+---@protected
+function c:__setAutoSize(v)
+    if v == self._props[UIKeys.autoSize] then
+        return
+    end
+    self._props[UIKeys.autoSize] = v;
+    local len = self:numChild();
+    if v then
+        self:measure();
+    end
+    ---@type Node_Core_Display_Drawable
+    local child;
+    for i = 1, len do
+        child = self:getChildAt(i);
+        if v then
+            child:on(UIEvent.MOVE, self.measure, self);
+            child:on(UIEvent.RESIZE, self.measure, self);
+        else
+            child:off(UIEvent.MOVE, self.measure, self);
+            child:off(UIEvent.RESIZE, self.measure, self);
+        end
+    end
+end
+
+---@protected
+function c:__getAutoSize()
+    return self._props[UIKeys.autoSize];
 end
 
 ---@overload
@@ -23,10 +54,12 @@ end
 ---@return Node_Core_Display_Drawable
 function c:addChildAt(node, index)
     local ret = Component.addChildAt(self, node, index);
-    node:on(UIEvent.MOVE_POS, self.measure, self);
-    node:on(UIEvent.RESIZE, self.measure, self);
-    self:measure();
-    return ret;
+    if self.autoSize then
+        node:on(UIEvent.MOVE, self.measure, self);
+        node:on(UIEvent.RESIZE, self.measure, self);
+        self:measure();
+        return ret;
+    end
 end
 
 ---@overload
@@ -34,9 +67,11 @@ end
 ---@return Node_Node
 function c:removeChildAt(index)
     local node = Component.removeChildAt(self, index);
-    node:off(UIEvent.MOVE_POS, self.measure, self);
-    node:off(UIEvent.RESIZE, self.measure, self);
-    self:measure();
+    if self.autoSize then
+        node:off(UIEvent.MOVE, self.measure, self);
+        node:off(UIEvent.RESIZE, self.measure, self);
+        self:measure();
+    end
     return node;
 end
 
@@ -71,7 +106,7 @@ function c:measure()
 
     self._props[UIKeys.measuredWidth] = maxW;
     self._props[UIKeys.measuredHeight] = maxH;
-
+    self:event(UIEvent.RESIZE);
 end
 
 ---@overload

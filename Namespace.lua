@@ -13,6 +13,10 @@ utils.Utils = require("fairy.core.utils.Utils");
 utils.Handler = require("node.modules.Handler");
 utils.Pool = require("fairy.core.utils.Pool");
 
+local net = {};
+net.Loader = require("fairy.core.net.Loader");
+net.LoaderManager = require("fairy.core.net.LoaderManager");
+
 local ui = {};
 ui.UIEvent = require("fairy.ui.event.UIEvent");
 ui.Component = require("fairy.ui.Component");
@@ -26,6 +30,7 @@ namespace.display = display;
 namespace.event = event;
 namespace.utils = utils;
 namespace.ui = ui;
+namespace.net = net;
 
 ------------------------------------------
 namespace.Node = display.Node;
@@ -39,6 +44,8 @@ namespace.TouchEvent = event.TouchEvent;
 namespace.Utils = utils.Utils;
 namespace.Handler = utils.Handler;
 namespace.Pool = utils.Pool;
+namespace.Loader = net.Loader;
+namespace.LoaderManager = net.LoaderManager;
 
 return namespace;
 

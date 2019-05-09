@@ -37,7 +37,7 @@ end
 function c:__setX(v)
     if self._x ~= v then
         DisplayObject.__setX(self, v);
-        self:event(UIEvent.MOVE_POS);
+        self:event(UIEvent.MOVE);
     end
 end
 
@@ -45,7 +45,7 @@ end
 function c:__setY(v)
     if self._y ~= v then
         DisplayObject.__setY(self, v);
-        self:event(UIEvent.MOVE_POS);
+        self:event(UIEvent.MOVE);
     end
 end
 
@@ -107,6 +107,7 @@ end
 
 ---@protected
 function c:__setWidth(v)
+    local w = self.width;
     if v < self.minWidth then
         v = self.minWidth;
     end
@@ -114,16 +115,22 @@ function c:__setWidth(v)
         v = self.maxWidth;
     end
     DisplayObject.__setWidth(self, v);
+    if w ~= self.width then
+        self:event(UIEvent.RESIZE);
+    end
 end
 
+---@protected
 function c:__getWidth()
     if self._width == nil then
         return self.measuredWidth;
     end
     return DisplayObject.__getWidth(self);
 end
+
 ---@protected
 function c:__setHeight(v)
+    local h = self.height;
     if v < self.minHeight then
         v = self.minHeight;
     end
@@ -131,8 +138,12 @@ function c:__setHeight(v)
         v = self.maxHeight;
     end
     DisplayObject.__setHeight(self, v);
+    if h ~= self.height then
+        self:event(UIEvent.RESIZE);
+    end
 end
 
+---@protected
 function c:__getHeight()
     if self._height == nil then
         return self.measuredHeight;

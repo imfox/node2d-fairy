@@ -10,4 +10,7 @@ c.maxHeight = "maxHeight";
 c.measuredWidth = "measuredWidth";
 c.measuredHeight = "measuredHeight";
 
+c.autoSize = "autoSize";
+c.skin = "skin";
+
 return c;

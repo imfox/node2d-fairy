@@ -91,6 +91,11 @@ function c.pointHitRect(x1, y1, x0, y0, w0, h0)
     return x1 >= x0 and x1 <= x0 + w0 and y1 >= y0 and y1 < y0 + h0
 end
 
+--获取扩展名
+function c.GetExtension(filename)
+    return filename:match(".+%.(%w+)$")
+end
+
 local id = 1;
 function c.getGID()
     id = id + 1;

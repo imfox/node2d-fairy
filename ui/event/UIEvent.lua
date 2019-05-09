@@ -1,7 +1,9 @@
 ---@class Fairy_Event_UIEvent
 local c = {};
 
-c.MOVE_POS = "MOVE_POS";
+c.MOVE = "MOVE";
 c.RESIZE = "RESIZE";
+
+c.LOADED = "LOADED";
 
 return c;
