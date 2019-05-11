@@ -33,11 +33,12 @@ function c:update(dt)
 end
 
 function c:draw()
-    gr.push()
-    gr.translate(self.offsetX, self.offsetY)
-    gr.scale(self.screenScaleX, self.screenScaleY)
+    gr.reset();
+    gr.push();
+    gr.translate(self.offsetX, self.offsetY);
+    gr.scale(self.screenScaleX, self.screenScaleY);
     self:__render();
-    gr.pop()
+    gr.pop();
 
     if self.offsetX ~= 0 or self.offsetY ~= 0 then
         --隐藏其它...比较搓

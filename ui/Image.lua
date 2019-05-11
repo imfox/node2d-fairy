@@ -80,6 +80,7 @@ function c:measure()
     end
     if (self._width == nil or self._height == nil) and (w ~= self._props[UIKeys.measuredWidth] or h ~= self._props[UIKeys.measuredHeight]) then
         self:event(UIEvent.RESIZE);
+        self:__resize();
     end
 end
 

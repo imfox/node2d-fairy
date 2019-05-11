@@ -43,10 +43,10 @@ function c:_push()
     local display = self.display;
 
     local state = _state;
-    state.r, state.g, state.b, state.alpha = getColor()
+    state.r, state.g, state.b, state.a = getColor()
     state.blendMode = getBlendMode();
     if display.alpha < 1 then
-        setColor(state.r, state.g, state.b, state.alpha * display.alpha);
+        setColor(state.r, state.g, state.b, state.a * display.alpha);
     end
     if display.blendMode then
         setBlendMode(display.blendMode);
@@ -79,7 +79,7 @@ end
 function c:_pop(state)
     local display = self.display;
     if display.alpha < 1 then
-        setColor(state.r, state.g, state.b, state.alpha);
+        setColor(state.r, state.g, state.b, state.a);
     end
     if display.blendMode then
         setBlendMode(state.blendMode);
