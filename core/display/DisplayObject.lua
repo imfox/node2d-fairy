@@ -278,13 +278,9 @@ end
 function c:__updateTransform()
     if self.scaleX == 1 and self.scaleY == 1 and self.rotation % 360 == 0 then
         self.__useTransform = false;
-        if self.transform then
-            Pool.instance:recover("_newTransform", self.transform)
-            self.transform = nil;
-        end
     elseif self._childs[1] then
         self.__useTransform = true;
-        self.transform = Pool.instance:getItemByCreateFun("_newTransform", newTransform);
+        self.transform = self.transform or Pool.instance:getItemByCreateFun("_newTransform", newTransform);
         self:__calcTransfrom();
     end
 end
@@ -299,7 +295,11 @@ end
 ---@param state Node_Core_Display_Drawable__RenderState
 ---@return Node_Core_Display_Drawable
 function c:__pop(state)
-    self.graphics:_pop(state)
+    self.graphics:_pop(state);
+    if self.__useTransform == false and self.transform then
+        Pool.instance:recover("_newTransform", self.transform)
+        self.transform = nil;
+    end
     return self;
 end
 
@@ -330,7 +330,9 @@ end
 function c:__renderChildren(gr)
     --- 理论上比 self:numChild() > 0  快
     if self._childs[1] then
-        translate(-self.pivotX, -self.pivotY);
+        if self.transform then
+            translate(-self.pivotX, -self.pivotY);
+        end
         for _, d in ipairs(self._childs) do
             d:__render(gr)
         end

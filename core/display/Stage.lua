@@ -2,7 +2,6 @@ local Class = require("class");
 local Drawable = require("fairy.core.display.DisplayObject");
 local Event = require("node.modules.Event");
 local FEvent = require("fairy.core.event.Event");
-local Pool = require("fairy.core.utils.Pool");
 local TouchManager = require("fairy.core.event.TouchManager");
 local gr = love.graphics;
 
@@ -25,6 +24,12 @@ end
 
 function c:update(dt)
     TouchManager.instance:runEvent();
+    for _, dr in ipairs(Drawable._STC_renderCallbackList) do
+        dr:event(FEvent.RENDER);
+    end
+    for _, dr in ipairs(Drawable._STC_enterFrameCallbackList) do
+        dr:event(FEvent.ENTER_FRAME);
+    end
 end
 
 function c:draw()
@@ -33,13 +38,6 @@ function c:draw()
     gr.scale(self.screenScaleX, self.screenScaleY)
     self:__render();
     gr.pop()
-
-    for _, dr in ipairs(Drawable._STC_renderCallbackList) do
-        dr:event(FEvent.RENDER);
-    end
-    for _, dr in ipairs(Drawable._STC_enterFrameCallbackList) do
-        dr:event(FEvent.ENTER_FRAME);
-    end
 
     if self.offsetX ~= 0 or self.offsetY ~= 0 then
         --隐藏其它...比较搓
@@ -53,23 +51,6 @@ function c:draw()
     end
 
 end
-
---function c:draw2()
---    gr.push()
---    gr.translate(self.offsetX, self.offsetY)
---    gr.scale(self.screenScaleX, self.screenScaleY)
---
---    if self.destroyed or not self.visible --[[ or self.alpha == 0 or self._scaleY == 0 or self._scaleX == 0 --]] then
---        return self;
---    end
---
---
---    Pool:GetItemByCreateFun("__transform", love.math.newTransform);
---
---
---    gr.pop()
---
---end
 
 ---@param w number
 ---@param h number
