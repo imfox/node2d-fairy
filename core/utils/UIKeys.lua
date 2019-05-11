@@ -8,6 +8,12 @@ c.minHeight = "minHeight";
 c.maxHeight = "maxHeight";
 c.measuredWidth = "measuredWidth";
 c.measuredHeight = "measuredHeight";
+c.anchorX = "anchorX";
+c.anchorY = "anchorY";
+c.anchorOffsetX = "anchorOffsetX";
+c.anchorOffsetY = "anchorOffsetY";
+--c.pivotX = "pivotX";
+--c.pivotY = "pivotY";
 
 --- box
 c.autoSize = "autoSize";

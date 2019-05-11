@@ -10,6 +10,8 @@ local UIEvent = require("fairy.ui.event.UIEvent");
 ---@field maxHeight number
 ---@field measuredWidth number
 ---@field measuredHeight number
+---@field anchorX number
+---@field anchorY number
 local c = class(DisplayObject);
 
 function c:ctor()
@@ -25,6 +27,12 @@ function c:ctor()
 
     self:getter("measuredWidth", self.__getMeasuredWidth);
     self:getter("measuredHeight", self.__getMeasuredHeight);
+
+    self:setter_getter("anchorX", self.__setAnchorX, self.__getAnchorX);
+    self:setter_getter("anchorY", self.__setAnchorY, self.__getAnchorY);
+
+    --self:setter_getter("pivotX", self.__setPivotX, self.__setPivotX);
+    --self:setter_getter("pivotY", self.__setPivotY, self.__setPivotY);
 
     self.minWidth = 0;
     self.minHeight = 0;
@@ -47,6 +55,41 @@ function c:__setY(v)
         DisplayObject.__setY(self, v);
         self:event(UIEvent.MOVE);
     end
+end
+
+--function c:__setPivotX(v)
+--end
+--function c:__getPivotX()
+--end
+--function c:__setPivotY(v)
+--end
+--function c:__getPivotY()
+--end
+
+---@protected
+function c:__setAnchorX(v)
+    if v == self._props[UIKeys.anchorX] then
+        return
+    end
+    self._props[UIKeys.anchorX] = v;
+    self:__resize();
+end
+---@protected
+function c:__getAnchorX()
+    return self._props[UIKeys.anchorX];
+end
+
+---@protected
+function c:__setAnchorY(v)
+    if v == self._props[UIKeys.anchorY] then
+        return
+    end
+    self._props[UIKeys.anchorY] = v;
+    self:__resize();
+end
+---@protected
+function c:__getAnchorY()
+    return self._props[UIKeys.anchorY];
 end
 
 ---@protected
@@ -116,6 +159,7 @@ function c:__setWidth(v)
     end
     DisplayObject.__setWidth(self, v);
     if w ~= self.width then
+        self:__resize();
         self:event(UIEvent.RESIZE);
     end
 end
@@ -139,6 +183,7 @@ function c:__setHeight(v)
     end
     DisplayObject.__setHeight(self, v);
     if h ~= self.height then
+        self:__resize();
         self:event(UIEvent.RESIZE);
     end
 end
@@ -151,8 +196,17 @@ function c:__getHeight()
     return DisplayObject.__getHeight(self);
 end
 
-function c:measure()
+---@protected
+function c:__resize()
+    if self.anchorX ~= nil then
+        self.pivotX = self.width * self.anchorX;
+    end
+    if self.anchorY ~= nil then
+        self.pivotY = self.height * self.anchorY;
+    end
+end
 
+function c:measure()
 end
 
 ---@protected
@@ -163,6 +217,14 @@ end
 ---@protected
 function c:__getMeasuredHeight()
     return self._props[UIKeys.measuredHeight];
+end
+
+---@param x number
+---@param y number
+function c:anchor(x, y)
+    self.anchorX = x;
+    self.anchorY = y;
+    return self;
 end
 
 return c;
