@@ -13,6 +13,7 @@ utils.Utils = require("fairy.core.utils.Utils");
 utils.Handler = require("node.modules.Handler");
 utils.Pool = require("fairy.core.utils.Pool");
 utils.Timer = require("fairy.core.utils.Timer");
+utils.Tween = require("fairy.core.utils.Tween");
 
 local net = {};
 net.Loader = require("fairy.core.net.Loader");
@@ -48,6 +49,7 @@ namespace.Pool = utils.Pool;
 namespace.Loader = net.Loader;
 namespace.LoaderManager = net.LoaderManager;
 namespace.Timer = utils.Timer;
+namespace.Tween = utils.Tween;
 
 return namespace;
 

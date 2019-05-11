@@ -9,6 +9,7 @@ local Event = require("node.modules.Event");
 local TouchEvent = require("fairy.core.event.TouchEvent");
 local Stage = require("fairy.core.display.Stage");
 local Timer = require("fairy.core.utils.Timer");
+local Tween = require("fairy.core.utils.Tween");
 
 ---@type Node_Core_Display_Stage
 local stageInstance = Stage.instance;
@@ -18,6 +19,7 @@ local function resize(w, h)
 end
 local function update(dt)
     Timer:_updateAll(dt);
+    Tween._UpdateAll(dt);
     stageInstance:update(dt);
 end
 local function draw()
