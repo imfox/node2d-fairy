@@ -9,14 +9,16 @@ c.pools = {};
 ---@param sign string
 ---@param item any
 function c:recover(sign, item)
-    c.pools[sign] = item;
-
+    if not c.pools[sign] then
+        c.pools[sign] = {};
+    end
+    table.insert(c.pools[sign], item);
 end
 
 ---@param sign string
 function c:getItem(sign)
-    local ls = c:getPoolBySign(sign);
-    if #ls > 1 then
+    local ls = self:getPoolBySign(sign);
+    if #ls > 0 then
         return table.remove(ls, 1);
     end
 end
@@ -40,7 +42,7 @@ end
 ---@param sign string
 ---@param cls Class
 function c:getItemByClass(sign, cls, ...)
-    local item = c:getItem(sign);
+    local item = self:getItem(sign);
     if not item then
         item = cls.new(...);
     end
@@ -50,7 +52,7 @@ end
 ---@param sign string
 ---@param createFun fun
 function c:getItemByCreateFun(sign, createFun, ...)
-    local item = c:getItem(sign);
+    local item = self:getItem(sign);
     if not item then
         item = createFun(...);
     end

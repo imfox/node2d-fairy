@@ -8,6 +8,7 @@ local Namespace = require("fairy.Namespace");
 local Event = require("node.modules.Event");
 local TouchEvent = require("fairy.core.event.TouchEvent");
 local Stage = require("fairy.core.display.Stage");
+local Timer = require("fairy.core.utils.Timer");
 
 ---@type Node_Core_Display_Stage
 local stageInstance = Stage.instance;
@@ -16,6 +17,7 @@ local function resize(w, h)
     stageInstance:_changeWindowSize(w, h);
 end
 local function update(dt)
+    Timer:_updateAll(dt);
     stageInstance:update(dt);
 end
 local function draw()
