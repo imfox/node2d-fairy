@@ -38,12 +38,12 @@ function c:print()
 
 end
 
-local _state = {};
 function c:_push()
     local display = self.display;
 
-    local state = _state;
+    local state = {};
     state.r, state.g, state.b, state.a = getColor()
+
     state.blendMode = getBlendMode();
     if display.alpha < 1 then
         setColor(state.r, state.g, state.b, state.a * display.alpha);

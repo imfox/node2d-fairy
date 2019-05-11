@@ -200,6 +200,10 @@ local _tweens = {};
 ---@param target any
 ---@param props {loop:boolean,override:boolean}
 function c.Get(target, props)
+    props = props or {};
+    if props.override then
+        c.RemoveTweens(target);
+    end
     local tw = tween.new(target, props);
     table.insert(_tweens, tw);
     return tw;
