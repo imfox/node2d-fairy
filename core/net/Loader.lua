@@ -2,6 +2,7 @@ local Class = require("class");
 local Utils = require("fairy.core.utils.Utils");
 local EventDispatcher = require("node.modules.EventDispatcher");
 local UIEvent = require("fairy.ui.event.UIEvent");
+local FontManager = require("fairy.core.utils.FontManager");
 
 local exist = love.filesystem.getInfo;
 
@@ -106,15 +107,17 @@ function Loader:load(url, type_, cache)
 
 end
 
----@protected
-function Loader:_onLoad(url)
-    print("url");
-end
-
 ---@param url string
 ---@param data any
 function Loader.cacheRes(url, data)
-    _cache[url] = data;
+    if data then
+        if data.type then
+            if data:type() == "Font" then
+                FontManager.Cache(url, Utils.Stripextension(Utils.GetFileName(url)));
+            end
+        end
+        _cache[url] = data;
+    end
 end
 
 ---@param url string

@@ -25,6 +25,7 @@ ui.Component = require("fairy.ui.Component");
 ui.Box = require("fairy.ui.Box");
 ui.Image = require("fairy.ui.Image");
 ui.Button = require("fairy.ui.Button");
+ui.Label = require("fairy.ui.Label");
 
 ---@class Node_Core_Namespace
 local namespace = {};

@@ -27,4 +27,8 @@ c.hoverImage = "hoverImage";
 c.pressImage = "pressImage";
 c.disabledImage = "disabledImage";
 
+--- label
+c.font = "font";
+c.text = "text";
+
 return c;

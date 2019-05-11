@@ -34,8 +34,8 @@ function c:drawGrid(img)
 
 end
 
-function c:print()
-
+function c:print(text, align)
+    gr.printf(text, self.x, self.y, self.display.width, align, self.rotation, self.scaleX, self.scaleY, self.pivotX, self.pivotY);
 end
 
 function c:_push()

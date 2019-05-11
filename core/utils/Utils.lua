@@ -96,6 +96,20 @@ function c.GetExtension(filename)
     return filename:match(".+%.(%w+)$")
 end
 
+function c.GetFileName(filename)
+    return string.match(filename, ".+/([^/]*%.%w+)$") -- *nix system
+    --return string.match(filename, “.+\([^\]*%.%w+)$”) — *nix system
+end
+
+function c.Stripextension(filename)
+    local idx = filename:match(".+()%.%w+$")
+    if (idx) then
+        return filename:sub(1, idx - 1)
+    else
+        return filename
+    end
+end
+
 local id = 1;
 function c.getGID()
     id = id + 1;
