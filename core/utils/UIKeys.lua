@@ -30,5 +30,11 @@ c.disabledImage = "disabledImage";
 --- label
 c.font = "font";
 c.text = "text";
+c.textFlow = "textFlow";
+c.valgin = "valgin";
+c.strokeColor = "strokeColor";
+c.stroke = "stroke";
+c.textColor = "textColor";
+
 
 return c;

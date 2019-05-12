@@ -207,16 +207,17 @@ function c:__resize()
 end
 
 function c:measure()
+    self:__resize();
 end
 
 ---@protected
 function c:__getMeasuredWidth()
-    return self._props[UIKeys.measuredWidth];
+    return self._props[UIKeys.measuredWidth] or 0;
 end
 
 ---@protected
 function c:__getMeasuredHeight()
-    return self._props[UIKeys.measuredHeight];
+    return self._props[UIKeys.measuredHeight] or 0;
 end
 
 ---@param x number
