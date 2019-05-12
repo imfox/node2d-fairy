@@ -114,6 +114,8 @@ function Loader.cacheRes(url, data)
         if data.type then
             if data:type() == "Font" then
                 FontManager.Cache(url, Utils.Stripextension(Utils.GetFileName(url)));
+                FontManager.Cache(url, Utils.GetFileName(url));
+                FontManager.Cache(url);
             end
         end
         _cache[url] = data;
@@ -129,9 +131,18 @@ end
 
 function Loader.clearRes(url)
     if _cache[url] then
-        if _cache[url].release then
-            _cache[url]:release();
+        local obj = _cache[url];
+        if obj.type then
+            if obj:type() == "Font" then
+                FontManager.Remove(url, Utils.Stripextension(Utils.GetFileName(url)));
+                FontManager.Remove(url, Utils.GetFileName(url));
+                FontManager.Remove(url);
+            end
         end
+        if obj.release then
+            obj:release();
+        end
+        obj = nil;
         _cache[url] = nil;
     end
 end

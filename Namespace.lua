@@ -14,6 +14,7 @@ utils.Handler = require("node.modules.Handler");
 utils.Pool = require("fairy.core.utils.Pool");
 utils.Timer = require("fairy.core.utils.Timer");
 utils.Tween = require("fairy.core.utils.Tween");
+utils.FontManager = require("fairy.core.utils.FontManager");
 
 local net = {};
 net.Loader = require("fairy.core.net.Loader");
