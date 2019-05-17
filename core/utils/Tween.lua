@@ -199,6 +199,7 @@ local _tweens = {};
 
 ---@param target any
 ---@param props {loop:boolean,override:boolean}
+---@return Fairy_Core_Utils_Tween
 function c.Get(target, props)
     props = props or {};
     if props.override then

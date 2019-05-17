@@ -42,6 +42,13 @@ function Loader.__getCache()
     return _cache;
 end
 
+function Loader.GetTypeByUrl(url)
+    local ext = Loader.extKeys[Utils.GetExtension(url)];
+    if ext then
+        return ext;
+    end
+end
+
 ---@param url string | LoaderArray[]
 ---@param type_ string
 ---@param cache boolean
@@ -59,10 +66,7 @@ function Loader:load(url, type_, cache)
     end
 
     if not type_ then
-        local ext = Loader.extKeys[Utils.GetExtension(url)];
-        if ext then
-            type_ = ext;
-        end
+        type_ = Loader.GetTypeByUrl(url)
     end
     type_ = type_ or Loader.IMAGE;
     cache = cache or true;

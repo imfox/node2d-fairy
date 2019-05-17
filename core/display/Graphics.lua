@@ -71,7 +71,7 @@ function c:printf(texts)
         if type(v) == "table" then
             -- love.graphics.setca
         else
-            self:print(v, display.align, 0,py + line * (display.lineSpacing + fontHeight));
+            self:print(v, display.align, 0,math.floor(py + line * (display.lineSpacing + fontHeight)));
             line = line + 1;
         end
     end
