@@ -7,6 +7,7 @@ local Class = require("class");
 local Namespace = require("fairy.Namespace");
 local Event = require("node.modules.Event");
 local TouchEvent = require("fairy.core.event.TouchEvent");
+local KeyEvent = require("fairy.core.event.KeyEvent")
 local Stage = require("fairy.core.display.Stage");
 local Timer = require("fairy.core.utils.Timer");
 local Tween = require("fairy.core.utils.Tween");
@@ -65,10 +66,10 @@ local function mousemoved(x, y, dx, dy, istouch)
 end
 
 local function keypressed(key, scancode, isrepeat)
-    keyboardEvent(TouchEvent.KEY_DOWN, key)
+    keyboardEvent(KeyEvent.KEY_DOWN, key)
 end
 local function keyreleased(key, scancode)
-    keyboardEvent(Event.KEY_UP, key)
+    keyboardEvent(KeyEvent.KEY_UP, key)
 end
 local registerFuncions = {
     update = update,

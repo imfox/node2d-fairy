@@ -69,8 +69,8 @@ function c:setSceenSize(w, h)
     self.offsetX, self.offsetY = (sw - (self.width * minScale)) / 2, (sh - (self.height * minScale)) / 2;
 end
 
-function c:keyboardEvent()
-    --TouchManager:onTouch(Event.MOUSE_DOWN, 1, 115, 877)
+function c:keyboardEvent(type, key)
+    self:event(type, { key });
 end
 
 ---@private

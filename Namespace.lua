@@ -7,6 +7,7 @@ local event = {};
 event.EventDispatcher = require("node.modules.EventDispatcher");
 event.Event = require("fairy.core.event.Event");
 event.TouchEvent = require("fairy.core.event.TouchEvent");
+event.KeyEvent = require("fairy.core.event.KeyEvent");
 
 local utils = {};
 utils.Utils = require("fairy.core.utils.Utils");
@@ -44,6 +45,7 @@ namespace.Stage = display.Stage;
 namespace.EventDispatcher = event.EventDispatcher;
 namespace.Event = event.Event;
 namespace.TouchEvent = event.TouchEvent;
+namespace.KeyEvent = event.KeyEvent
 
 namespace.Utils = utils.Utils;
 namespace.Handler = utils.Handler;
