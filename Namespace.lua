@@ -52,6 +52,7 @@ namespace.Handler = utils.Handler;
 namespace.Pool = utils.Pool;
 namespace.Loader = net.Loader;
 namespace.LoaderManager = net.LoaderManager;
+namespace.loaderManager = net.LoaderManager.instance;
 namespace.Timer = utils.Timer;
 namespace.Tween = utils.Tween;
 
