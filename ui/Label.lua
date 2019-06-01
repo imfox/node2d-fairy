@@ -3,56 +3,13 @@ local Component = require("fairy.ui.Component");
 local UIKeys = require("fairy.core.utils.UIKeys");
 local FontManager = require("fairy.core.utils.FontManager");
 local Loader = require("fairy.core.net.Loader");
+local Utils = require("fairy.core.utils.Utils")
 
 local WHITE = { 1, 1, 1, 1 }
 
----@param text string
----@return string[]
-local function splitChar(str, tv)
-    local t = tv or {}
-    local i = 1
-    local ascii = 0
-    while true do
-        ascii = string.byte(str, i)
-        if ascii then
-            if ascii < 127 then
-                table.insert(t, string.sub(str, i, i))
-                i = i + 1
-            else
-                table.insert(t, string.sub(str, i, i + 1))
-                i = i + 2
-            end
-        else
-            break
-        end
-    end
-    return t
-end
 
----@param text string
----@param px number @像素
----@param font Font
-local function splitText(text, px, font)
-    local chars = {};
-    local strs = {};
-    splitChar(text, chars);
-    local str = "";
-    for i, c in ipairs(chars) do
-        if c == "\n" then
-            table.insert(strs, "");
-            str = "";
-        elseif font:getWidth(str .. c) > px then
-            table.insert(strs, str);
-            str = c;
-        else
-            str = str .. c;
-        end
-    end
-    if #str > 0 then
-        table.insert(strs, str);
-    end
-    return strs;
-end
+local splitChar = Utils.splitChar
+local splitText = Utils.splitText
 
 ---@class Fairy_UI_Label : Fairy_UI_Component
 ---@field font string

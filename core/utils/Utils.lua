@@ -119,4 +119,52 @@ end
 function c.void()
 end
 
+---@param text string
+---@return string[]
+function c.splitChar(str, tv)
+    local t = tv or {}
+    local i = 1
+    local ascii = 0
+    while true do
+        ascii = string.byte(str, i)
+        if ascii then
+            if ascii < 127 then
+                table.insert(t, string.sub(str, i, i))
+                i = i + 1
+            else
+                table.insert(t, string.sub(str, i, i + 1))
+                i = i + 2
+            end
+        else
+            break
+        end
+    end
+    return t
+end
+
+---@param text string
+---@param px number @像素
+---@param font Font
+function c.splitText(text, px, font)
+    local chars = {};
+    local strs = {};
+    splitChar(text, chars);
+    local str = "";
+    for i, c in ipairs(chars) do
+        if c == "\n" then
+            table.insert(strs, "");
+            str = "";
+        elseif font:getWidth(str .. c) > px then
+            table.insert(strs, str);
+            str = c;
+        else
+            str = str .. c;
+        end
+    end
+    if #str > 0 then
+        table.insert(strs, str);
+    end
+    return strs;
+end
+
 return c;
