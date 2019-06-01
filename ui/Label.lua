@@ -3,53 +3,53 @@ local Component = require("fairy.ui.Component");
 local UIKeys = require("fairy.core.utils.UIKeys");
 local FontManager = require("fairy.core.utils.FontManager");
 local Loader = require("fairy.core.net.Loader");
-local Utils = require("fairy.core.utils.Utils");
 
+local WHITE = { 1, 1, 1, 1 }
 
 ---@param text string
 ---@return string[]
-local function splitChar(str,tv)
-	local t = tv or {}
-	local i = 1
-	local ascii = 0
-	while true do
-		ascii = string.byte(str, i)
-		if ascii then
-			if ascii < 127 then
-				table.insert(t,string.sub(str, i, i))
-				i = i+1
-			else
-				table.insert(t,string.sub(str, i, i+1))
-			    i = i+2
-			end
-		else
-		    break
-		end
-	end
-	return t
+local function splitChar(str, tv)
+    local t = tv or {}
+    local i = 1
+    local ascii = 0
+    while true do
+        ascii = string.byte(str, i)
+        if ascii then
+            if ascii < 127 then
+                table.insert(t, string.sub(str, i, i))
+                i = i + 1
+            else
+                table.insert(t, string.sub(str, i, i + 1))
+                i = i + 2
+            end
+        else
+            break
+        end
+    end
+    return t
 end
 
 ---@param text string
 ---@param px number @像素
 ---@param font Font
-local function splitText(text,px,font)
+local function splitText(text, px, font)
     local chars = {};
     local strs = {};
     splitChar(text, chars);
     local str = "";
     for i, c in ipairs(chars) do
         if c == "\n" then
-            table.insert(strs,"");
+            table.insert(strs, "");
             str = "";
         elseif font:getWidth(str .. c) > px then
-            table.insert(strs,str);
+            table.insert(strs, str);
             str = c;
         else
             str = str .. c;
         end
     end
     if #str > 0 then
-        table.insert(strs,str);
+        table.insert(strs, str);
     end
     return strs;
 end
@@ -58,9 +58,9 @@ end
 ---@field font string
 ---@field align AlignMode
 ---@field text string
----@field valign VAlignMode
+---@field vAlign VAlignMode
 ---@field textFlow any[]
----@field tetxtColor string
+---@field textColor string
 ---@field strokeColor string
 ---@field stroke number
 ---@field lineSpacing number
@@ -76,11 +76,15 @@ function c:ctor(text)
 
     self.lineSpacing = 0;
     self.__textArr = {};
+
+    ---@type AlignMode
     self.align = "left";
-    self.valign = "top";
-    
+
+    ---@type VAlignMode
+    self.vAlign = "top";
+
     self.text = text;
-    
+
 end
 
 ---@protected
@@ -141,13 +145,13 @@ end
 
 ---@overload
 function c:__setWidth(v)
-    Component.__setWidth(self,v);
+    Component.__setWidth(self, v);
     self:measure();
 end
 
 ---@overload
 function c:__setHeight(v)
-    Component.__setHeight(self,v);
+    Component.__setHeight(self, v);
     self:measure();
 end
 
@@ -173,7 +177,7 @@ function c:measure()
             end
         end
         local h = lines * (self.lineSpacing + font:getHeight());
-        self._props[UIKeys.measuredWidth] = w; 
+        self._props[UIKeys.measuredWidth] = w;
         self._props[UIKeys.measuredHeight] = h;
     end
     self:__resize();
@@ -183,7 +187,7 @@ end
 ---@param gr Fairy_Core_Display_Graphics
 function c:__draw(gr)
     if self.__textArr and self.__textArr[1] then
-        
+
         ---@type Font
         local font = self:_getFont();
         if font then
@@ -192,7 +196,7 @@ function c:__draw(gr)
             font:setLineHeight((self.lineSpacing + fs) / fs);
         end
 
-        gr:printf(self.__textArr);
+        gr:printf(self.__textArr, self.stroke, self.strokeColor or WHITE);
     end
 end
 

@@ -11,10 +11,12 @@ event.KeyEvent = require("fairy.core.event.KeyEvent");
 
 local utils = {};
 utils.Utils = require("fairy.core.utils.Utils");
+utils.Common = require("fairy.core.utils.Common");
 utils.Handler = require("node.modules.Handler");
 utils.Pool = require("fairy.core.utils.Pool");
 utils.Timer = require("fairy.core.utils.Timer");
 utils.Tween = require("fairy.core.utils.Tween");
+utils.Ease = require("fairy.core.utils.Ease");
 utils.FontManager = require("fairy.core.utils.FontManager");
 
 local net = {};

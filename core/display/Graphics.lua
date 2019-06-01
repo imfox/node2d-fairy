@@ -1,5 +1,7 @@
 local Class = require("class");
 
+local Draw = require("fairy.core.utils.Draw")
+
 local gr = love.graphics;
 local translate, pop, push, applyTransform, newTransform = gr.translate, gr.pop, gr.push, gr.applyTransform, love.math.newTransform
 local getColor, setColor = gr.getColor, gr.setColor
@@ -35,43 +37,44 @@ function c:drawGrid(img)
 end
 
 ---@private
-function c:print(text, align,x,y)
-    x = x or 0;
-    y = y or 0;
+function c:print(text, align, x, y, stroke, strokeColor)
+    x = x or 0
+    y = y or 0
+    stroke = stroke or 0
     align = align or "left";
-    gr.printf(text, self.x+x, self.y+y, self.display.width, align, self.rotation, self.scaleX, self.scaleY, self.pivotX, self.pivotY);
+    --gr.printf();
+    Draw.printf(text, self.x + x, self.y + y, self.display.width, align, self.rotation, self.scaleX, self.scaleY, self.pivotX, self.pivotY, 0, 0, stroke, strokeColor)
 end
 
 ---@param texts any[]
-function c:printf(texts)
+function c:printf(texts, stroke, strokeColor)
     ---@type Fairy_UI_Label
     local display = self.display;
     local font = gr.getFont();
     local fontHeight = font:getHeight();
-    local h = 0;
 
     local py = 0;
-    if display._height ~= nil and display._width ~= nil and display._height > display.measuredHeight and display.valign ~= "top" then
+    if display._height ~= nil and display._width ~= nil and display._height > display.measuredHeight and display.vAlign ~= "top" then
         local lines = 0;
-        for i, v in ipairs(texts) do
+        for _, v in ipairs(texts) do
             if type(v) == "string" then
                 lines = lines + 1;
             end
-        end 
+        end
 
-        if display.valign == "bottom" then
+        if display.vAlign == "bottom" then
             py = display._height - display.measuredHeight;
-        elseif display.valign == "middle" then
+        elseif display.vAlign == "middle" then
             py = (display._height - display.measuredHeight) / 2;
         end
     end
 
     local line = 0;
-    for i, v in ipairs(texts) do
+    for _, v in ipairs(texts) do
         if type(v) == "table" then
             -- love.graphics.setca
         else
-            self:print(v, display.align, 0,math.floor(py + line * (display.lineSpacing + fontHeight)));
+            self:print(v, display.align, 0, math.floor(py + line * (display.lineSpacing + fontHeight)), stroke, strokeColor);
             line = line + 1;
         end
     end
@@ -91,7 +94,7 @@ function c:_push()
         setBlendMode(display.blendMode);
     end
     if display.font then
-       state.font = getFont(); 
+        state.font = getFont();
     end
     local x, y = 0, 0
     if display.parent then
