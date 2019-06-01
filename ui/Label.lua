@@ -7,8 +7,6 @@ local Utils = require("fairy.core.utils.Utils")
 
 local WHITE = { 1, 1, 1, 1 }
 
-
-local splitChar = Utils.splitChar
 local splitText = Utils.splitText
 
 ---@class Fairy_UI_Label : Fairy_UI_Component

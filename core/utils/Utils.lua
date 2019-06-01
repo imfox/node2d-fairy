@@ -148,7 +148,7 @@ end
 function c.splitText(text, px, font)
     local chars = {};
     local strs = {};
-    splitChar(text, chars);
+    c.splitChar(text, chars);
     local str = "";
     for i, c in ipairs(chars) do
         if c == "\n" then
