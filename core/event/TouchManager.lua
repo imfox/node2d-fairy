@@ -1,6 +1,7 @@
 local class = require("class");
 local TouchEvent = require("fairy.core.event.TouchEvent");
 local Utils = require("fairy.core.utils.Utils");
+local Common = require("fairy.core.utils.Common")
 
 ---@param node Node_Core_Display_Drawable
 ---@param x number
@@ -27,7 +28,11 @@ function c:ctor()
     ---@type Node_Core_Event_Touch__Event[]
     self._events = {};
 
+    ---@type Node_Node[]
     self._press = {};
+
+    ---@type Node_Node[]
+    self._hovers = {}
 
     self.event = TouchEvent.new();
 
@@ -105,7 +110,7 @@ function c:runEvent()
         elseif event.type == TouchEvent.TOUCH_END then
             self:check(self.stage, event.x, event.y, event.id, self.onTouchEnd);
         elseif event.type == TouchEvent.TOUCH_MOVE then
-            --self:check(self.stage, event.x, event.y, self.onTouchUp);
+            self:check(self.stage, event.x, event.y, event.id, self.onTouchMove);
         end
         table.remove(self._events, 1);
     end
@@ -170,8 +175,48 @@ end
 
 ---@protected
 ---@param node Node_Core_Display_Drawable
-function c:onTouchMove(node)
-
+---@param id any
+function c:onTouchMove(node, id)
+    if node then
+        local list = self:getNodes(node);
+        local old = self._hovers[id]
+        if not old then
+            self:_sendEvents(list, TouchEvent.TOUCH_ENTER, id);
+            self._hovers[id] = node
+        elseif old ~= node then
+            if old:contains(node) then
+                local arr = self:getNodes(node, old);
+                self:_sendEvents(arr, TouchEvent.TOUCH_ENTER, id);
+            elseif node:contains(old) then
+                local arr = self:getNodes(old, node);
+                self:_sendEvents(arr, TouchEvent.TOUCH_OUT, id);
+            else
+                local tar
+                local arr = {}
+                local oldArr = self:getNodes(old);
+                local newArr = self:getNodes(node);
+                local len = #oldArr
+                for i = 1, len do
+                    tar = oldArr[i]
+                    local index = Common.Array.IndexOf(newArr, tar)
+                    if index > 0 then
+                        table.remove(newArr, index)
+                        break
+                    else
+                        table.insert(arr, tar)
+                    end
+                end
+                if #arr then
+                    self:_sendEvents(arr, TouchEvent.TOUCH_OUT, id);
+                end
+                if #newArr then
+                    self:_sendEvents(newArr, TouchEvent.TOUCH_ENTER, id);
+                end
+            end
+            self._hovers[id] = node
+        end
+        self:_sendEvents(list, TouchEvent.TOUCH_MOVE, id);
+    end
 end
 
 ---@param stage Node_Core_Display_Stage

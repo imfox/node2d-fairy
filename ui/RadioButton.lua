@@ -129,7 +129,8 @@ function c:__setDisabled(v)
     end
     self._disabled = v;
     if self._disabled then
-        self:off(TouchEvent.TOUCH_HOVER, self.__onTouchHover, self);
+        self:off(TouchEvent.TOUCH_ENTER, self.__onTouchHover, self);
+        self:off(TouchEvent.TOUCH_OUT, self.__onTouchOut, self);
         self:off(TouchEvent.TOUCH_BEGIN, self.__onTouchBegin, self);
         self:off(TouchEvent.TOUCH_END, self.__onTouchEnd, self);
         self:off(TouchEvent.TOUCH_RELEASE_OUTSIDE, self.__onTouchOutEnd, self);
@@ -137,7 +138,8 @@ function c:__setDisabled(v)
         self:off(Event.BEFORE_REMOVE, self.__removeCallback, self);
         self.__state = 4;
     else
-        self:on(TouchEvent.TOUCH_HOVER, self.__onTouchHover, self);
+        self:on(TouchEvent.TOUCH_ENTER, self.__onTouchHover, self);
+        self:on(TouchEvent.TOUCH_OUT, self.__onTouchOut, self);
         self:on(TouchEvent.TOUCH_BEGIN, self.__onTouchBegin, self);
         self:on(TouchEvent.TOUCH_END, self.__onTouchEnd, self);
         self:on(TouchEvent.TOUCH_RELEASE_OUTSIDE, self.__onTouchOutEnd, self);
@@ -211,8 +213,16 @@ end
 
 ---@protected
 function c:__onTouchHover()
-    if not self.selected then
+    if not self.selected and self.__state ~= 3 then
         self.__state = 2;
+        self:__updateState();
+    end
+end
+
+---@protected
+function c:__onTouchOut()
+    if not self.selected and self.__state ~= 3 then
+        self.__state = 1;
         self:__updateState();
     end
 end

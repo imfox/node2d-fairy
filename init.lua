@@ -62,7 +62,7 @@ local function mousepressed(x, y, button, istouch)
     mouseEvent(type, button, x, y)
 end
 local function mousemoved(x, y, dx, dy, istouch)
-    mouseEvent(TouchEvent.MOUSE_MOVE, 1, x, y)
+    mouseEvent(TouchEvent.MOUSE_MOVE, 0, x, y)
 end
 
 local function keypressed(key, scancode, isrepeat)

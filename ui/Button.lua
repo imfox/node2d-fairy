@@ -15,7 +15,10 @@ end
 
 ---@protected
 function c:__onTouchEnd()
-    self:__onTouchOutEnd()
+    if not self.selected then
+        self.__state = 2
+        self:__updateState()
+    end
 end
 
 return c;
