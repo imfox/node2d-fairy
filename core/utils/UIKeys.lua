@@ -25,6 +25,7 @@ c.skin = "skin";
 c.normalImage = "normalImage";
 c.hoverImage = "hoverImage";
 c.pressImage = "pressImage";
+c.selectImage = "selectImage";
 c.disabledImage = "disabledImage";
 
 --- label
@@ -35,6 +36,5 @@ c.valgin = "valgin";
 c.strokeColor = "strokeColor";
 c.stroke = "stroke";
 c.textColor = "textColor";
-
 
 return c;

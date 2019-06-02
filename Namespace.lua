@@ -28,6 +28,7 @@ ui.UIEvent = require("fairy.ui.event.UIEvent");
 ui.Component = require("fairy.ui.Component");
 ui.Box = require("fairy.ui.Box");
 ui.Image = require("fairy.ui.Image");
+ui.RadioButton = require("fairy.ui.RadioButton");
 ui.Button = require("fairy.ui.Button");
 ui.Label = require("fairy.ui.Label");
 
